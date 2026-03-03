@@ -67,7 +67,7 @@ select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "DJ"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 django_find_project = false
-pythonpath = ["src", "tests"]
+pythonpath = ["src", "."]
 addopts = "--tb=short -q"
 
 [tool.coverage.run]
