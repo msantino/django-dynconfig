@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        django-version: ["4.2", "5.0", "5.1", "5.2"]
+        exclude:
+          # Django 5.0+ requires Python 3.10+
+          - python-version: "3.10"
+            django-version: "5.0"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "django~=${{ matrix.django-version }}.0"
+          pip install .[dev,encryption]
+
+      - name: Lint
+        run: ruff check src/ tests/
+
+      - name: Test
+        run: pytest --cov=dynconfig --cov-report=xml -q
+
+      - name: Upload coverage
+        if: matrix.python-version == '3.12' && matrix.django-version == '5.2'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml

@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+django_dynconfig-*/
+.eggs/
+*.egg
+.tox/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.venv/
+*.db
+*.sqlite3
+.ruff_cache/
